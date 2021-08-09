@@ -36,10 +36,12 @@ test('Order phases for happy path', async () => {
   const scoopsHeading = screen.getByRole('heading', { name: 'Scoops: $6.00' });
   expect(scoopsHeading).toBeInTheDocument();
 
+
   const toppingsHeading = screen.getByRole('heading', {
     name: 'Toppings: $1.50',
   });
   expect(toppingsHeading).toBeInTheDocument();
+
 
   // check summary option items
   expect(screen.getByText('1 Vanilla')).toBeInTheDocument();
@@ -62,6 +64,12 @@ test('Order phases for happy path', async () => {
   });
   userEvent.click(confirmOrderButton);
 
+  //KullKatt and Mike's code
+  //Checking if the loading appears immediately
+  const loading = screen.getByText(/loading/i); //the "i" means loading is not case sensitive
+  expect(loading).toBeInTheDocument();
+  //end
+
   // check confirmation page text
   // this one is async because there is a POST request to server in between summary
   //    and confirmation pages
@@ -69,6 +77,12 @@ test('Order phases for happy path', async () => {
     name: /thank you/i,
   });
   expect(thankYouHeader).toBeInTheDocument();
+
+  //KullKatt and Mike's code
+  const notLoading = screen.queryByText('loading'); //now we expect that the loading has dissapeared
+  expect(notLoading).not.toBeInTheDocument();
+  //we used "queryBy" because we expect it not to be in the document
+  //end
 
   const orderNumber = await screen.findByText(/order number/i);
   expect(orderNumber).toBeInTheDocument();
